@@ -65,7 +65,7 @@ post = (req, res) => {
     if (!error) {
       return Teacher.create(teacher)
         .then((result) => {
-          res.status(201).json("Professor cadastrado com sucesso!");
+          res.status(201).json(teacher);
         })
         .catch((err) => {
           console.error("Erro ao conectar a collection teacher: ", err);
@@ -96,7 +96,7 @@ put = (req, res, query) => {
         .then(async (result) => {
           if (result) {
             // if professor exists
-            res.status(200).json("Professor editado com sucesso!");
+            res.status(200).json(result);
             //  updates the course that contains this teacher
             await courseModel.updateTeacher(req.params.id, result);
             // receives the updated teacher and updates the student that contains this teacher

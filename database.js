@@ -7,6 +7,7 @@ exports.connect = () => {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   });
 
   mongoose.connection.on("connected", () => {

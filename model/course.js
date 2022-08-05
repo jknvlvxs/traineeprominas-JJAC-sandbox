@@ -65,7 +65,7 @@ post = (req, res) => {
     if (!error) {
       return Course.create(course)
         .then((result) => {
-          res.status(201).json("Curso cadastrado com sucesso!");
+          res.status(201).json(result);
         })
         .catch((err) => {
           console.error("Erro ao conectar a collection course:", err);
@@ -97,7 +97,7 @@ put = (req, res, query) => {
         .then((result) => {
           // update course in student
           if (result) {
-            res.status(200).json("Curso editado com sucesso!");
+            res.status(200).json(result);
             studentModel.updateCourse(req.params.id, result);
           } else {
             res.status(401).json("Não é possível editar curso inexistente");

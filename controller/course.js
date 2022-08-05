@@ -74,16 +74,10 @@ exports.putCourse = (req, res) => {
   let query = { _id: req.params.id, status: 1 }; // define query for search and update
   (async () => {
     if (req.body.teacher) {
-      // if course is inserted
-      for (let i = req.body.teacher.length - 1; i > -1; i--) {
-        teacher = await teacherModel.getTeacher(req.body.teacher[i]);
-        if (teacher.length > 0) {
-          // if course exists
-          req.body.teacher[i] = teacher[0]; // receive the course related to the inserted id
-        } else {
-          req.body.teacher.splice(i, 1); // clean if not exists
-        }
-      }
+      // if teacher is inserted
+      req.body.teacher = await Promise.all(
+        req.body.teacher.map((teacher) => teacherModel.getTeacher(teacher))
+      );
     }
 
     Joi.validate(req.body, schemaCourse, (err, result) => {

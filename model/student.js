@@ -1,3 +1,4 @@
+const { ObjectID } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const courseSchema = require("./course").courseSchema;
@@ -13,13 +14,7 @@ studentSchema = new Schema(
         "A idade inserida é {VALUE} anos de idade, a idade mínima permitida é 17!",
       ],
     },
-    course: {
-      type: [courseSchema],
-      validate: [
-        (val) => val.length == 1,
-        "É necessário inserir um curso válido",
-      ],
-    },
+    course: { type: ObjectID },
     status: { type: Number },
   },
   { versionKey: false }
@@ -58,7 +53,6 @@ getFiltered = (res, query, projection) => {
 };
 
 post = (req, res) => {
-  console.log(req.body);
   var student = new Student({
     name: req.body.name,
     lastName: req.body.lastName,
@@ -70,14 +64,13 @@ post = (req, res) => {
     if (!error) {
       return Student.create(student)
         .then((result) => {
-          res.status(201).json("Estudante cadastrado com sucesso!");
+          res.status(201).json(student);
         })
         .catch((err) => {
           console.error("Erro ao conectar a collection student: ", err);
           res.status(500);
         });
     } else {
-      console.log(error);
       try {
         res.status(401).json({
           message: "Não foi possível cadastrar o estudante",
@@ -116,7 +109,7 @@ put = (req, res, query) => {
       return Student.findOneAndUpdate(query, { $set: student })
         .then((result) => {
           if (result) {
-            res.status(200).json("Estudante editado com sucesso!");
+            res.status(200).json(student);
           } else {
             res.status(401).json("Não é possível editar estudante inexistente");
           }
